@@ -4,7 +4,7 @@ Implements Directed Acyclic Graph (DAG) validation, topological sorting,
 and probabilistic counterfactual confidence scoring for SRE incident root causes.
 """
 
-from typing import List, Dict, Set, Tuple
+from typing import List, Dict, Set, Tuple, Any
 from collections import defaultdict, deque
 from backend.api.schemas import CausalGraph, CausalNode, CausalEdge, NodeType
 
