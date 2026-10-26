@@ -119,8 +119,8 @@ AxiomSRE comes equipped with 3 realistic enterprise incident scenarios that can 
 ### Option A: Local Python Run (Recommended)
 ```bash
 # 1. Clone the repository
-git clone https://github.com/your-username/axiomsre.git
-cd axiomsre
+git clone https://github.com/poowa-gg/AxiomSRE.git
+cd AxiomSRE
 
 # 2. Install dependencies (Python 3.10+)
 pip install -r requirements.txt
