@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AxiomSRE - Autonomous Multi-Tier Incident Commander</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Header Navbar -->
+    <header class="navbar">
+        <div class="brand-wrapper">
+            <div class="brand-logo">A</div>
+            <div>
+                <span class="brand-title">AxiomSRE</span>
+                <span class="brand-tag">NVIDIA x Nebius Global AI Hackathon</span>
+            </div>
+        </div>
+
+        <div class="status-badges">
+            <div class="badge-item" id="nebius-badge">
+                <span class="badge-dot dot-green"></span> Nebius Token Factory: Ready
+            </div>
+            <div class="badge-item">
+                <span class="badge-dot dot-blue"></span> NVIDIA Nemotron-3 (Super / Ultra 550B)
+            </div>
+            <div class="badge-item" id="tavily-badge">
+                <span class="badge-dot dot-orange"></span> Tavily Grounding: Ready
+            </div>
+            <div class="burn-counter-box">
+                <span class="burn-label">Downtime Loss:</span>
+                <span class="burn-val" id="burn-val">$14,280</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="container">
+
+        <!-- Top Scenario Selector Strip -->
+        <section class="scenario-strip" id="scenario-strip">
+            <!-- Populated via JavaScript -->
+        </section>
+
+        <!-- Action Control Bar -->
+        <section class="glass-panel action-bar">
+            <div class="incident-headline">
+                <h2 id="active-title">Cascading 504 Gateway Timeouts in Payment Webhook Dispatcher</h2>
+                <p id="active-service">Service: checkout-webhook-service | Severity: P0_CRITICAL | Burn Rate: $8,400/min</p>
+            </div>
+            <div class="action-buttons">
+                <button class="btn btn-primary" id="btn-analyze">
+                    ⚡ Run Autonomous Auto-Remediation
+                </button>
+                <button class="btn btn-secondary" id="btn-postmortem" disabled>
+                    📄 Export Post-Mortem
+                </button>
+            </div>
+        </section>
+
+        <!-- Dashboard Grid -->
+        <div class="dashboard-grid">
+
+            <!-- LEFT COLUMN: Telemetry, Metrics & External Web Grounding -->
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+
+                <!-- Real-Time Metrics Row -->
+                <div class="metrics-row">
+                    <div class="metric-card">
+                        <div class="m-label">Error Rate</div>
+                        <div class="m-val" id="metric-error-rate" style="color: #f87171;">42.8%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="m-label">p99 Latency</div>
+                        <div class="m-val" id="metric-p99" style="color: #fbbf24;">14,850 ms</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="m-label">Financial Burn</div>
+                        <div class="m-val" id="metric-burn-rate" style="color: #ef4444;">$8,400/m</div>
+                    </div>
+                </div>
+
+                <!-- Live Telemetry Stream -->
+                <div class="glass-panel panel">
+                    <div class="panel-header">
+                        <span class="panel-title">
+                            <span class="badge-dot dot-green"></span> Live Production Telemetry (OpenTelemetry Logs)
+                        </span>
+                        <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-dim);">Live Ingress</span>
+                    </div>
+                    <div class="panel-content" style="padding: 10px;">
+                        <div class="terminal-window" id="log-terminal">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tavily Live Grounding Panel -->
+                <div class="glass-panel panel">
+                    <div class="panel-header">
+                        <span class="panel-title">
+                            <span class="badge-dot dot-orange"></span> Tavily AI Live Grounding & External Corroboration
+                        </span>
+                        <span style="font-size: 11px; color: var(--tavily-orange); font-weight: 600;">Sponsor Prize Contender</span>
+                    </div>
+                    <div class="panel-content">
+                        <div class="evidence-list" id="evidence-list">
+                            <div style="color: var(--text-dim); font-size: 12px; font-style: italic;">
+                                Click 'Run Autonomous Auto-Remediation' to trigger real-time Tavily search queries for cloud provider status, GitHub issues, and CVE feeds...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN: Swarm Execution, Causal DAG & Verified Remediation -->
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+
+                <!-- Swarm Activity Feed -->
+                <div class="glass-panel panel">
+                    <div class="panel-header">
+                        <span class="panel-title">
+                            <span class="badge-dot dot-blue"></span> Autonomous Agent Swarm Activity
+                        </span>
+                        <span style="font-size: 11px; color: var(--text-dim);">Multi-Tier Nemotron + Tavily</span>
+                    </div>
+                    <div class="panel-content">
+                        <div class="swarm-timeline" id="swarm-timeline">
+                            <div style="color: var(--text-dim); font-size: 12px; font-style: italic;">
+                                Awaiting trigger. Sentinel Agent (Nemotron-3 Super) on standby for log clustering...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Neuro-Symbolic Causal DAG -->
+                <div class="glass-panel panel">
+                    <div class="panel-header">
+                        <span class="panel-title">
+                            <span class="badge-dot dot-green"></span> Directed Acyclic Causal Graph (DAG)
+                        </span>
+                        <span style="font-size: 11px; color: var(--nvidia-green); font-weight: 600;">Nemotron-3 Ultra 550B</span>
+                    </div>
+                    <div class="panel-content">
+                        <div class="dag-container" id="dag-container">
+                            <div style="color: var(--text-dim); font-size: 12px; font-style: italic;">
+                                Causal graph derivation pending analysis...
+                            </div>
+                        </div>
+                        <div style="margin-top: 12px; font-size: 12px; line-height: 1.5; color: var(--text-main);" id="dag-explanation"></div>
+                        <div style="margin-top: 6px; font-size: 11px; color: var(--nvidia-green); font-family: 'JetBrains Mono', monospace;" id="dag-proof"></div>
+                    </div>
+                </div>
+
+                <!-- Verified Remediation Studio & Sandbox Proof -->
+                <div class="glass-panel panel">
+                    <div class="panel-header">
+                        <span class="panel-title">
+                            <span class="badge-dot dot-green"></span> Sandboxed Remediation Studio (Verified Git Diff)
+                        </span>
+                        <button class="btn btn-secondary" id="btn-run-sandbox" style="padding: 4px 10px; font-size: 11px;" disabled>
+                            ⚡ Re-run Sandbox Pytest
+                        </button>
+                    </div>
+                    <div class="panel-content">
+                        <div class="diff-window" id="diff-window">
+                            <span class="diff-ctx">Unified Git diff will be synthesized upon auto-remediation execution...</span>
+                        </div>
+                        
+                        <!-- Sandbox Proof Card -->
+                        <div class="sandbox-card">
+                            <div class="sandbox-hdr">
+                                <span class="sb-status" id="sb-status">
+                                    <span class="badge-dot dot-green"></span> Sandbox Test Proof
+                                </span>
+                            </div>
+                            <div class="sb-out" id="sb-output">No tests executed yet.</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Post-Mortem Report Modal -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="pm-title" style="font-size: 15px; font-weight: 700;">SRE Incident Post-Mortem</h3>
+                <button class="close-btn" id="btn-close-modal">&times;</button>
+            </div>
+            <div class="modal-body" id="pm-body">
+                <!-- Populated dynamically -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="btn-copy-pm">Copy Markdown</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
