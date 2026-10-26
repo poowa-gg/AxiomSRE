@@ -8,7 +8,7 @@ from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse, Response
+from fastapi.responses import FileResponse, Response, HTMLResponse
 from backend.config import settings
 from backend.api.routes import router as api_router
 
@@ -31,14 +31,20 @@ app.add_middleware(
 app.include_router(api_router)
 
 # Mount Frontend Static Assets
+# On Vercel, static files are served by @vercel/static directly (routes in vercel.json).
+# On local dev, FastAPI serves them via StaticFiles mount.
 frontend_dir = Path(__file__).parent / "frontend" / "static"
-if frontend_dir.exists():
+_is_vercel = os.environ.get("VERCEL") == "1"
+
+if frontend_dir.exists() and not _is_vercel:
     app.mount("/static", StaticFiles(directory=str(frontend_dir)), name="static")
 
-    @app.get("/")
-    async def serve_index():
-        index_file = frontend_dir / "index.html"
-        return FileResponse(str(index_file))
+@app.get("/", response_class=HTMLResponse)
+async def serve_index():
+    index_file = frontend_dir / "index.html"
+    if index_file.exists():
+        return HTMLResponse(content=index_file.read_text(encoding="utf-8"), status_code=200)
+    return HTMLResponse(content="<h1>AxiomSRE</h1><p>Frontend assets not found.</p>", status_code=200)
 
 @app.get("/favicon.ico", include_in_schema=False)
 async def favicon():
