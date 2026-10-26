@@ -8,7 +8,7 @@ from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, Response
 from backend.config import settings
 from backend.api.routes import router as api_router
 
@@ -39,6 +39,10 @@ if frontend_dir.exists():
     async def serve_index():
         index_file = frontend_dir / "index.html"
         return FileResponse(str(index_file))
+
+@app.get("/favicon.ico", include_in_schema=False)
+async def favicon():
+    return Response(status_code=204)
 
 @app.get("/healthz")
 async def health_check():

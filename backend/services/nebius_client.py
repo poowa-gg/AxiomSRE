@@ -20,7 +20,7 @@ class NebiusClient:
         self.base_url = settings.NEBIUS_BASE_URL
         self.fast_model = settings.NVIDIA_FAST_MODEL
         self.reasoning_model = settings.NVIDIA_REASONING_MODEL
-        self.is_live = bool(self.api_key and self.api_key.strip() != "YOUR_NEBIUS_API_KEY")
+        self.is_live = bool(not settings.DEMO_MODE and self.api_key and self.api_key.strip() != "YOUR_NEBIUS_API_KEY")
 
         if self.is_live:
             try:

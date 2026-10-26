@@ -19,7 +19,7 @@ class TavilyGroundingClient:
     def __init__(self):
         self.api_key = settings.TAVILY_API_KEY
         self.endpoint = settings.TAVILY_BASE_URL
-        self.is_live = bool(self.api_key and self.api_key.strip() != "YOUR_TAVILY_API_KEY")
+        self.is_live = bool(not settings.DEMO_MODE and self.api_key and self.api_key.strip() != "YOUR_TAVILY_API_KEY")
 
         if self.is_live:
             logger.info("Tavily AI Grounding Client initialized in LIVE mode.")
