@@ -30,29 +30,56 @@ app.add_middleware(
 # Include API Router
 app.include_router(api_router)
 
-# Mount Frontend Static Assets
-# On Vercel, static files are served by @vercel/static directly (routes in vercel.json).
-# On local dev, FastAPI serves them via StaticFiles mount.
-frontend_dir = Path(__file__).parent / "frontend" / "static"
+# Detect Vercel serverless environment — no filesystem StaticFiles mount available
 _is_vercel = os.environ.get("VERCEL") == "1"
+_root = Path(__file__).parent
+_frontend_dir = _root / "frontend" / "static"
 
-if frontend_dir.exists() and not _is_vercel:
-    app.mount("/static", StaticFiles(directory=str(frontend_dir)), name="static")
+# On local dev: mount static files normally via FastAPI
+if not _is_vercel and _frontend_dir.exists():
+    app.mount("/static", StaticFiles(directory=str(_frontend_dir)), name="static")
 
-@app.get("/", response_class=HTMLResponse)
+
+def _build_inline_html() -> str:
+    """Read CSS + JS and embed them directly into the HTML for Vercel compatibility."""
+    html_path = _frontend_dir / "index.html"
+    css_path = _frontend_dir / "css" / "style.css"
+    js_path = _frontend_dir / "js" / "app.js"
+
+    html = html_path.read_text(encoding="utf-8") if html_path.exists() else "<h1>AxiomSRE</h1>"
+    css = css_path.read_text(encoding="utf-8") if css_path.exists() else ""
+    js = js_path.read_text(encoding="utf-8") if js_path.exists() else ""
+
+    # Replace external /static/... references with inline <style> and <script>
+    html = html.replace(
+        '<link rel="stylesheet" href="/static/css/style.css">',
+        f"<style>\n{css}\n</style>"
+    )
+    html = html.replace(
+        '<script src="/static/js/app.js"></script>',
+        f"<script>\n{js}\n</script>"
+    )
+    return html
+
+
+# Pre-build the HTML once at startup (fast subsequent requests)
+_INLINE_HTML: str = _build_inline_html() if _frontend_dir.exists() else "<h1>AxiomSRE API</h1>"
+
+
+@app.get("/", response_class=HTMLResponse, include_in_schema=False)
 async def serve_index():
-    index_file = frontend_dir / "index.html"
-    if index_file.exists():
-        return HTMLResponse(content=index_file.read_text(encoding="utf-8"), status_code=200)
-    return HTMLResponse(content="<h1>AxiomSRE</h1><p>Frontend assets not found.</p>", status_code=200)
+    return HTMLResponse(content=_INLINE_HTML, status_code=200)
+
 
 @app.get("/favicon.ico", include_in_schema=False)
 async def favicon():
     return Response(status_code=204)
 
+
 @app.get("/healthz")
 async def health_check():
     return {"status": "ok", "app": settings.APP_NAME, "version": settings.APP_VERSION}
+
 
 if __name__ == "__main__":
     import uvicorn
